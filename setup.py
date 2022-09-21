@@ -24,6 +24,25 @@ DOWNLOAD_URL = 'https://github.com/mne-tools/mne-features.git'
 VERSION = version
 
 
+def parse_environment_file(fname):
+    environment = list()
+    with open(fname, 'r') as fid:
+        dependencies = False
+        for line in fid:
+            env = line.strip()
+            if env.startswith('#'):
+                continue
+            if not dependencies:
+                if env == "dependencies:":
+                    dependencies = True
+                continue
+            if env.endswith(':'):
+                continue
+            env = env.split(' ')[1]
+            environment.append(env)
+        return environment
+
+
 def package_tree(pkgroot):
     """Get the submodule list."""
     # Adapted from VisPy
@@ -35,6 +54,7 @@ def package_tree(pkgroot):
 
 
 if __name__ == "__main__":
+    install_requires = parse_environment_file('environment.yml')
     setup(name=DISTNAME,
           maintainer=MAINTAINER,
           maintainer_email=MAINTAINER_EMAIL,
@@ -59,6 +79,5 @@ if __name__ == "__main__":
           platforms='any',
           python_requires='>=3.6',
           packages=package_tree('mne_features'),
-          install_requires=['numpy', 'scipy', 'numba', 'scikit-learn', 'mne',
-                            'PyWavelets', 'pandas'],
+          install_requires=install_requires,
           )
