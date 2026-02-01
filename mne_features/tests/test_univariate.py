@@ -402,7 +402,9 @@ def test_feature_names_pow_freq_bands():
             funcs_params={'pow_freq_bands__ratios': 'only',
                           'pow_freq_bands__freq_bands': fb},
             return_as_df=True)
-        assert_equal(df_only.columns.get_level_values(1).to_list(), ratios_names)
+        assert_equal(
+            df_only.columns.get_level_values(1).to_list(), ratios_names
+        )
 
         # With `ratios = 'all'`:
         df_all = extract_features(
